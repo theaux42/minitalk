@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbabou <tbabou@42.fr>                      +#+  +:+       +#+        */
+/*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 15:13:44 by tbabou            #+#    #+#             */
-/*   Updated: 2024/02/01 12:07:59 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/06/13 15:10:12 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,26 @@ void	display_binary(char *octet)
 		ft_printf("%sSomething went wrong...%s\n", RED, RESET);
 		exit(0);
 	}
-		
+	if (result == 0)
+		ft_printf("%s%s%s", GREEN, "Message received: ", RESET);
 	ft_putchar(result);
+}
+
+char binary_to_char(char *str)
+{
+	int	i;
+	int	result;
+
+	i = 128;
+	result = 0;
+	while (*str)
+	{
+		if (*str == '1')
+			result += i;
+		i /= 2;
+		str++;
+	}
+	return (result);
 }
 
 int ft_ft_strlen(char *str)
@@ -50,22 +68,56 @@ int ft_ft_strlen(char *str)
 	return (i);
 }
 
+char	*ftstrjoin(char const *s1, char const *s2)
+{
+	char	*str;
+	size_t	i;
+	size_t	j;
+
+	str = (char*)malloc(sizeof(*s1) * (ft_ft_strlen((char *)s1) + ft_ft_strlen((char *)s2) + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s1[i])
+	{
+		str[j++] = s1[i];
+		i++;
+	}
+	i = 0;
+	while (s2[i])
+	{
+		str[j++] = s2[i];
+		i++;
+	}
+	str[j] = 0;
+	return (str);
+}
+
 void	bit_handler(int sig)
 {
-	static char	str[8];
-
+	static char	current_char[8];
+	static char *string;
+	
+	if (!string)
+		string = NULL;
 	if (sig == SIGINT)
 	{
 		exit(0);
 	}
 	if (sig == SIGUSR1)
-		str[ft_ft_strlen(str)] = '1';
+		current_char[ft_ft_strlen(current_char)] = '1';
 	else if (sig == SIGUSR2)
-		str[ft_ft_strlen(str)] = '0';
-	if (ft_ft_strlen(str) == 8)
-	{
-		display_binary(str);
-		ft_memset(str, '\0', 8);
+		current_char[ft_ft_strlen(current_char)] = '0';
+	if (ft_ft_strlen(current_char) == 8)
+	{		
+		if (binary_to_char(current_char) == 0)
+		{
+			ft_printf("%s%s%s", GREEN, string, RESET);
+		}
+		else
+			string = ftstrjoin(string, current_char);
+		ft_memset(current_char, '\0', 8);
 	}
 }
 
@@ -76,7 +128,6 @@ int	main(void)
 	ft_printf("=== %sWaiting for text%s ===\n", BLUEBG, RESET);
 	signal(SIGUSR2, bit_handler);
 	signal(SIGUSR1, bit_handler);
-	signal(SIGINT, bit_handler);
 	while (1)
 		;
 	return (0);

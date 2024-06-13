@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbabou <tbabou@42.fr>                      +#+  +:+       +#+        */
+/*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 10:43:26 by tbabou            #+#    #+#             */
-/*   Updated: 2024/01/29 16:18:30 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/06/13 14:54:47 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	main(int argc, char **argv)
 			send_bit(ft_atoi(argv[1]), int_to_binary(' ', &m_free));
 		i = -1;
 	}
+	send_bit(ft_atoi(argv[1]), "00000000");
 	ft_free_all(&m_free);
 	return (0);
 }
