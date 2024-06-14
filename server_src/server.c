@@ -6,7 +6,7 @@
 /*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 15:13:44 by tbabou            #+#    #+#             */
-/*   Updated: 2024/06/13 15:10:12 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:53:05 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,13 @@ int ft_ft_strlen(char *str)
 	return (i);
 }
 
-char	*ftstrjoin(char const *s1, char const *s2)
+char	*ftstrjoin(char const *s1, char s2)
 {
 	char	*str;
 	size_t	i;
 	size_t	j;
 
-	str = (char*)malloc(sizeof(*s1) * (ft_ft_strlen((char *)s1) + ft_ft_strlen((char *)s2) + 1));
+	str = (char*)malloc(sizeof(*s1) * (ft_ft_strlen((char *)s1) + 2));
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -84,14 +84,27 @@ char	*ftstrjoin(char const *s1, char const *s2)
 		str[j++] = s1[i];
 		i++;
 	}
-	i = 0;
-	while (s2[i])
-	{
-		str[j++] = s2[i];
-		i++;
-	}
+	str[j++] = s2;
 	str[j] = 0;
 	return (str);
+}
+
+char	*ftstrdup(const char *s1)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = malloc(ft_ft_strlen((char *)s1) + 1);
+	if (!tmp)
+		return (NULL);
+	while (s1[i])
+	{
+		tmp[i] = s1[i];
+		i++;
+	}
+	tmp[i] = 0;
+	return (tmp);
 }
 
 void	bit_handler(int sig)
@@ -100,11 +113,7 @@ void	bit_handler(int sig)
 	static char *string;
 	
 	if (!string)
-		string = NULL;
-	if (sig == SIGINT)
-	{
-		exit(0);
-	}
+		string = ftstrdup("");
 	if (sig == SIGUSR1)
 		current_char[ft_ft_strlen(current_char)] = '1';
 	else if (sig == SIGUSR2)
@@ -116,7 +125,7 @@ void	bit_handler(int sig)
 			ft_printf("%s%s%s", GREEN, string, RESET);
 		}
 		else
-			string = ftstrjoin(string, current_char);
+			string = ftstrjoin(string, binary_to_char(current_char));
 		ft_memset(current_char, '\0', 8);
 	}
 }

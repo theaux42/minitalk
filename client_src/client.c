@@ -6,7 +6,7 @@
 /*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 10:43:26 by tbabou            #+#    #+#             */
-/*   Updated: 2024/06/13 14:54:47 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:49:21 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,27 @@ void	send_bit(int pid, char *str)
 		else
 			kill(pid, SIGUSR2);
 		str++;
-		usleep(300);
+		usleep(10);
 	}
 }
 
-char	*int_to_binary(int decimal_num, t_m_free *m_free)
+char *int_to_binary(int decimal_num, t_m_free *m_free)
 {
-	char	*bit;
-	int		i;
-	int		remainder;
+    char *bit;
+    int i;
 
-	i = 7;
-	bit = ft_malloc(sizeof(char) * 8, m_free);
-	if (!bit)
-		return (ft_free_all(m_free), NULL);
-	ft_memset(bit, '0', 8);
-	while (decimal_num != 0)
-	{
-		remainder = decimal_num % 2;
-		decimal_num /= 2;
-		bit[i] = remainder + '0';
-		i--;
-	}
-	return (bit);
+    bit = ft_malloc(sizeof(char) * 8, m_free);
+    if (!bit)
+        return (ft_free_all(m_free), NULL);
+    ft_memset(bit, '0', 8);
+
+    for (i = 7; i >= 0; i--)
+    {
+        bit[i] = (decimal_num & 1) + '0';
+        decimal_num >>= 1;
+    }
+
+    return (bit);
 }
 
 int	main(int argc, char **argv)
