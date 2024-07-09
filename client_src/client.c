@@ -6,7 +6,7 @@
 /*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 10:43:26 by tbabou            #+#    #+#             */
-/*   Updated: 2024/06/21 14:24:57 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/07/10 00:44:44 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,12 @@ void	send_message(char *str, int pid)
 
 int	main(int argc, char **argv)
 {
-	if (argc < 3)
-		return (ft_printf("%sBad usage => ./client pid message%s", RED, RESET),
-			0);
 	if (ft_atoi(argv[1]) < 1)
-		return (ft_printf("%sBad usage => PID INVALID.%s", RED, RESET), 0);
-	if (argc > 3)
-		return (ft_printf("%sBad usage => ./client pid message%s", RED, RESET),
-			0);
-	if (argc == 3)
-		send_message(argv[2], ft_atoi(argv[1]));
+		return (ft_printf("%sBad usage - Invalid pid%s", RED, RESET), -1);
+	if (argc != 3)
+		return (ft_printf("%sBad usage - Too much args%s", RED, RESET),
+			-1);
+	send_message(argv[2], ft_atoi(argv[1]));
 	send_bit(ft_atoi(argv[1]), "00000000");
 	return (0);
 }
