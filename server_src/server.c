@@ -6,7 +6,7 @@
 /*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 15:13:44 by tbabou            #+#    #+#             */
-/*   Updated: 2024/06/21 14:24:36 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/07/10 01:08:23 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,19 @@
 
 char	binary_to_char(char *str)
 {
+	int	i;
 	int	result;
 
+	i = 128;
 	result = 0;
 	while (*str)
 	{
-		result <<= 1;
 		if (*str == '1')
-			result |= 1;
+			result += i;
+		i /= 2;
 		str++;
 	}
-	return ((char)result);
+	return (result);
 }
 
 void	bit_handler(int sig)
