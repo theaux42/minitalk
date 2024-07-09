@@ -13,21 +13,30 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
+#  -L $(PRINTF_PATH) -lftprintf
+
 all: $(CLIENT_NAME) $(SERVER_NAME)
-	$(CC) $(CLIENT_OBJ) $(CFLAGS) -L $(LIBFT_PATH) -lft -L $(PRINTF_PATH) -lftprintf -o $(CLIENT_NAME) 
-	$(CC) $(SERVER_OBJ) $(CFLAGS) -L $(LIBFT_PATH) -lft -L $(PRINTF_PATH) -lftprintf -o $(SERVER_NAME)
 
 $(CLIENT_NAME): $(CLIENT_OBJ)
-	$(CC) $(CLIENT_OBJ) $(CFLAGS) -L $(LIBFT_PATH) -lft -L $(PRINTF_PATH) -lftprintf -o $(CLIENT_NAME)
+	@cd $(LIBFT_PATH) && make -s
+	@$(CC) $(CLIENT_OBJ) $(CFLAGS) -L $(LIBFT_PATH) -lft -o $(CLIENT_NAME)
+	@printf "\033[KClient compiled successfully!\n"
 
 $(SERVER_NAME): $(SERVER_OBJ)
-	$(CC) $(SERVER_OBJ) $(CFLAGS) -L $(LIBFT_PATH) -lft -L $(PRINTF_PATH) -lftprintf -o $(SERVER_NAME)
-
+	@cd $(LIBFT_PATH) && make -s
+	@$(CC) $(SERVER_OBJ) $(CFLAGS) -L $(LIBFT_PATH) -lft -o $(SERVER_NAME)
+	@printf "\033[KServer compiled successfully!\n"
+	
 clean:
+	@printf "Deleting object files...\r"
 	$(RM) $(CLIENT_OBJ) $(SERVER_OBJ)
+	@printf "\033[K✅ Object files deleted successfully!\n"
 
 fclean: clean
-	$(RM) $(CLIENT_NAME) $(SERVER_NAME)
+	@printf "Deleting binaries...\r" > /dev/null
+	@$(RM) $(CLIENT_NAME) $(SERVER_NAME)
+	@@cd $(LIBFT_PATH) && make fclean -s
+	@printf "\033[K✅ Binaries deleted successfully!\n"
 
 re: fclean all
 

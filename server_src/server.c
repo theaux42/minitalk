@@ -3,80 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbabou <tbabou@42.fr>                      +#+  +:+       +#+        */
+/*   By: tbabou <tbabou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 15:13:44 by tbabou            #+#    #+#             */
-/*   Updated: 2024/02/01 12:07:59 by tbabou           ###   ########.fr       */
+/*   Updated: 2024/07/10 01:08:23 by tbabou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
-#include "../ft_printf/ft_printf.h"
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-void	display_binary(char *octet)
+char	binary_to_char(char *str)
 {
 	int	i;
 	int	result;
 
 	i = 128;
 	result = 0;
-	while (*octet)
+	while (*str)
 	{
-		if (*octet == '1')
+		if (*str == '1')
 			result += i;
 		i /= 2;
-		octet++;
+		str++;
 	}
-	if (result > 127 || result < 0)
-	{
-		ft_printf("%sSomething went wrong...%s\n", RED, RESET);
-		exit(0);
-	}
-		
-	ft_putchar(result);
-}
-
-int ft_ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	return (result);
 }
 
 void	bit_handler(int sig)
 {
-	static char	str[8];
+	static char	current_char[8];
+	static char	*string;
 
-	if (sig == SIGINT)
-	{
-		exit(0);
-	}
+	if (!string)
+		string = ft_strdup("");
 	if (sig == SIGUSR1)
-		str[ft_ft_strlen(str)] = '1';
+		current_char[ft_strlen(current_char)] = '1';
 	else if (sig == SIGUSR2)
-		str[ft_ft_strlen(str)] = '0';
-	if (ft_ft_strlen(str) == 8)
+		current_char[ft_strlen(current_char)] = '0';
+	if (ft_strlen(current_char) == 8)
 	{
-		display_binary(str);
-		ft_memset(str, '\0', 8);
+		if (binary_to_char(current_char) == 0)
+		{
+			ft_printf("%s", string);
+			free(string);
+			string = NULL;
+		}
+		else
+			string = ft_addchar(string, binary_to_char(current_char));
+		ft_memset(current_char, '\0', 8);
 	}
 }
 
 int	main(void)
 {
-	ft_printf("Welcome on my %sminitalk%s\n", GREEN, RESET);
-	ft_printf("PID is %s%d%s\n", BLUE, getpid(), RESET);
-	ft_printf("=== %sWaiting for text%s ===\n", BLUEBG, RESET);
+	ft_printf("Welcome on my %sminitalk%s\n", MAGENTA, RESET);
+	ft_printf("PID is %s%d%s\n", MAGENTA, getpid(), RESET);
+	ft_printf("=== %sWaiting for text%s ===\n", MAGENTABG, RESET);
 	signal(SIGUSR2, bit_handler);
 	signal(SIGUSR1, bit_handler);
-	signal(SIGINT, bit_handler);
 	while (1)
 		;
 	return (0);
